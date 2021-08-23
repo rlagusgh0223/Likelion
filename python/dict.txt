@@ -1,0 +1,9 @@
+name = {"길동" : 20, "철수" : 25, "영희" : 27}
+#길동이 지우기
+name.remove(0)
+#dict 전체 출력하여 확인
+print(name)
+#철수 27살로 바꾸기
+name["철수"] = 27
+#dict 전체 출력하여 확인
+print(name)
