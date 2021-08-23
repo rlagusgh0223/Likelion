@@ -1,0 +1,35 @@
+
+total_dict = {}
+
+while True:
+    question = input("질문 : ")
+    if question == 'q':
+        break
+    else:
+        total_dict[question] = ""
+
+for i in total_dict:
+    print(i)
+    ans = input("답변 : ")
+    total_dict[i] = ans
+
+print(total_dict)
+
+#결과 : {'취미?': '독서', '집?': '서울'}
+
+###################################
+
+total_list = []
+while True:
+    question = input("질문 : ")
+    if question == 'q':
+        break
+    else:
+        total_list.append({"질문":question, "답변":""})
+
+for i in total_list:
+    print(i["질문"])
+    ans = input("답변 : ")
+    i["답변"] = ans
+print(total_list)
+#[{'질문': '취미?', '답변': '독서'}, {'질문': '집?', '답변': '서울'}]
