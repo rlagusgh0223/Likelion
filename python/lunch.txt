@@ -1,0 +1,29 @@
+import time
+import random
+
+lunch = ["부대찌개",'치킨','햄버거']
+
+while True:
+    print(lunch)
+    item = input("음식을 추가해주세요 : ")
+    if item == 'q':
+        break
+    else:
+        lunch.append(item)
+print(lunch)
+
+lunch_set = set(lunch)
+while True:
+    print(lunch_set)
+    item = input("삭제할 음식 : ")
+    if item == 'q':
+        break
+    else:
+        lunch_set = lunch_set - set([item])
+
+print(lunch_set,"중에서 선택")
+for i in range(5,0,-1):
+    print(i)
+    time.sleep(1)
+
+print("오늘 점심은", random.choice(list(lunch_set)))
