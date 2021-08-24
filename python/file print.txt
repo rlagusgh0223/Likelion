@@ -1,0 +1,23 @@
+from bs4 import BeautifulSoup
+import requests
+from datetime import datetime
+
+url = "http://www.daum.net/"
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+rank = 1
+
+results = soup.findAll('a','link_favorsch')
+
+#r	:	read - 읽기전용모드
+#w	:	write - 쓰기모드(최근내용이 덮어씀)
+#a	:	append - 기존의 파일에 새로운 내용 덧붙임
+
+search_rank_file = open("rankresult.txt","w")	#txt파일 생성
+
+print(datetime.today().strftime("%Y년 %m월 %d일의 실시간 검색어 순위입니다.\n"))	#시간 출력
+
+for result in results:
+    search_rank_file.write(str(rank)+"위:"+result.get_text()+"\n")	#txt에 내용 수정
+    print(rank,"위 : ",result.get_text(),"\n")	#순위 출력
+    rank += 1
