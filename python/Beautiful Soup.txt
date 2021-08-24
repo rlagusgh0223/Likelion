@@ -1,0 +1,30 @@
+#BeautifulSoup4
+
+import requests
+from bs4 import BeautifulSoup
+
+url = "http://www.daum.net/"
+response = requests.get(url)
+print(response.text)		#print(response.text[:500])쓰면 500줄까지만 출력
+
+soup = BeautifulSoup(response.text, 'html.parser')
+
+print(soup.title)		#<title>Daum</title>
+print(soup.title.string)	#Daum
+print(soup.span)		#맨 첫줄 span 태그 출력
+print(soup.findAll('span'))	#모든 span 태그 출력
+
+
+
+####################################################
+#BeautifulSoup6
+
+from bs4 import BeautifulSoup
+import requests
+
+url = "http://www.daum.net/"
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+#html문서에서 모든 a태그를 가져오는 코드 + link_favorsch라는 클래스를 가져오는 코드
+print(soup.findAll("a","link_favorsch"))
