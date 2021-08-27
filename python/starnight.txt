@@ -3,11 +3,14 @@
 *****
 *****
 *****
+#내 풀이
 for x in range(5) :
     for y in range(5):
         print("*", end="")
     print()
-
+#선생님 풀이
+for x in range(5) :
+    print("*" * 5)
 ##############################
 
 *
@@ -15,7 +18,11 @@ for x in range(5) :
 ***
 ****
 *****
+#내 풀이
 for x in range(5) :
     for y in range(x+1):
         print("*", end="")
     print()
+#선생님풀이
+for x in range(5) :
+    print("*" *(x))
