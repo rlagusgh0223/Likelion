@@ -1,0 +1,6 @@
+nname = input("이름을 입력하시오 : ")
+print(nname,"씨, 안녕하세요?")
+print("파이썬에 오신 것을 환영합니다.")
+nData1 = int(input("첫 번째 정수를 입력하시오 : "))
+nData2 = int(input("두 번째 정수를 입력하시오 : "))
+print(nData1,"과",nData2,"의 합은",nData1+nData2,"입니다.")
