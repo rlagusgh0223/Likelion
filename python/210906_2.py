@@ -1,4 +1,3 @@
-"""
 #1
 #정수 두개 입력
 #첫번째 1~200, 두번째 10~200
@@ -178,8 +177,111 @@ for i in range(1,101):
 #i%3이 0이라면 True가 되므로 Fizz가 나온다
 #i%5가 0이라면 True가 되므로 Buzz가 나온다
 #+니까 동시에 되면 FizzBuzz가 나온다
-"""
+
 
 #9
+#2021/09/06 #9에서 이어짐
 #터틀 그래픽스로 익히는 GUI 개념
 #Graphic User Interpase?
+
+import turtle as t
+t.shape('circle') <=원
+t.shape('arrow') <= 삼각형
+t.shape('turtle') #<= 거북이
+
+import turtle as t
+t.color('red','black')
+t.shapesize(2,2,1)
+t.shape('turtle')
+
+import turtle as t
+t.setup(width = 500, height = 500)
+    #윈도우 기본 크기는 디스플레이 너비의50%
+    #높이의 75%인데 여기서 재지정했음
+    #단위는 픽셀
+t.shapesize(2,2,1)
+t.shape('turtle')
+
+
+import turtle as t
+t.shape('turtle')
+t.forward(100)      #거북이가 100픽셀만큼 이동한다
+t.right(90)         #거북이가 방향 바꾼다
+
+#사각형 그리기
+import turtle as t
+t.shape('turtle')
+t.forward(100)
+t.right(90)
+t.forward(100)
+t.right(90)
+t.forward(100)
+t.right(90)
+t.forward(100)
+t.right(90)
+
+#for문 이용
+import turtle as t
+t.shape('turtle')
+for i in range(4):
+    t.forward(100)
+    t.right(90)
+
+#앞 : forward, fd
+#뒤 : backward
+#왼쪽: left(각도)
+#오른쪽 : right(각도)
+#goto(x,y) : x,y 좌표로 이동
+#down() : 이동한 흔적이 남는다
+#up() : 흔적이 남지 않는다
+#speed(speed):속도범위[0,10]
+
+#두개의 사각형
+import turtle as t
+t.shape('turtle')
+for i in range(4):
+    t.forward(100)
+    t.right(90)
+t.up()
+t.goto(150,50)      #사각형의 가로, 세로는 100인데
+                    #사각형 사이의 거리는 50이니까
+                    #오른쪽으로 가려면 150증가
+                    #맨 처음 시작할때 시작점 기
+t.down()
+for i in range(4):
+    t.forward(100)
+    t.right(90)
+
+
+#4개의 사각형
+import turtle as t
+t.shape('turtle')
+for i in range(6):
+    t.forward(100)
+    t.right(90)
+t.up()
+t.left(180)
+t.forward(100)
+t.down()
+
+t.left(90)
+for i in range(4):
+    t.forward(100)
+    t.right(90)
+t.up()
+t.left(180)
+t.forward(100)
+t.down()
+
+for i in range(4):
+    t.forward(100)
+    t.left(90)
+t.up()
+t.right(90)
+t.forward(100)
+t.down()
+
+for i in range(4):
+    t.forward(100)
+    t.left(90)
+
