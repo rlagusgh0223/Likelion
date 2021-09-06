@@ -1,4 +1,3 @@
-"""
 #1
 #파이썬에서 난수를 생성하려면 random모듈이 필요
 #random모듈의 난수 : 0.0 <= random.random() < 1.0
@@ -228,7 +227,7 @@ for i in range(nData+1):
     if i%2 == 0:
         continue
     print(i)
-"""
+
 
 #14
 #0과 73 사이의 숫자 중 3으로 끝나는 숫자만 출력
