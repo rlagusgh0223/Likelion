@@ -4,16 +4,55 @@ print("돈을 투입하세요")
 nMoney = {1:10000, 2:5000, 3:1000, 4:500, 5:100}
 nDrink = {1:1200, 2:1100, 3:700, 4:1500, 5:1300}
 nName = {1:"사이다", 2:"콜라", 3:"생수", 4:"주스", 5:"커피"}
+nGet = [0,3,3,3,3,3]
 
 #========================금액 입력===========================
 while True:
-    print("1:10,000원 / 2:5,000원 / 3:1,000원 / 4:500원 / 5:100원 / 0:입력완료")
+    print("1:10,000원 / 2:5,000원 / 3:1,000원 / 4:500원 / 5:100원 / 0:입력완료 / 99:재고관리")
     cnt = int(input("금액번호를 고르세요 : "))       #0이 입력될때까지 금액을 받는 변수
     if cnt == 0:
         break
     elif 1 <= cnt <= 5:                  #1~5를 입력하면 해당 금액 total에 추가
         total += nMoney[cnt]
         print("누적금액 :",total,"원")
+    #===============재고관리===============
+    elif cnt == 99:
+        while True:
+            print("1:추가 2:제거 3:현재수량 0:처음으로")
+            n1 = int(input())
+            if n1 == 1:
+                n2 = int(input("제품을 선택하세요"))
+                if 1<= n2 <= 5:
+                    print(nName[n2],"는 재고가",nGet[n2],"개 있습니다. 몇개를 추가하나요")
+                    nPlus = int(input())
+                    nGet[n2] += nPlus
+                    print(nName[n2],"는 재고가",nGet[n2],"개로 변경되었습니다.")
+                else:
+                    print("잘못된 입력")
+                    
+            elif n1 == 2:
+                n2 = int(input("제품을 선택하세요"))
+                if 1<= n2 <= 5:
+                    print(nName[n2],"는 재고가",nGet[n2],"개 있습니다. 몇개를 제거하나요")
+                    nPlus = int(input())
+                    if nGet[n2] <0:
+                        print("재고가 부족합니다")
+                    else:
+                        nGet[n2] -= nPlus
+                        print(nName[n2],"는 재고가",nGet[n2],"개로 변경되었습니다.")
+                else:
+                    print("잘못된 입력")
+                    
+            elif n1 == 3:
+                for n3 in range(1,6):
+                    print("현재수량 :",nName[n3],"=",nGet[n3])
+                    
+            elif n1 == 0:
+                break
+            
+            else:
+                print("잘못된 입력")
+    #======================================
     else:
         print("잘못된 입력")         #보기 이외의 값일 경우 재입력
     print()
