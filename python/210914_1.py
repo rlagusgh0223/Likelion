@@ -177,6 +177,12 @@ while True:
 
 
 #8
+#계산 맞추기 게임
+#random모듈을 이용해서 간단한 덧셈,뺄셈,곱셈 문제를
+#임의로 만들어줌
+#답을 입력하면 정답인지 오답인지 계산해서 점수 매김
+#반복 5회
+#eval함수 쓰고 make_question함수 작성할것
 import random
 
 def make_question(x, n1, n2):
