@@ -236,12 +236,3 @@ rb2 = tk.Radiobutton(root, text='Option 2', variable=rbvar, value='b', indicator
 rb2.pack()
 
 root.mainloop()
-
-
-
-
-
-
-
-
-
