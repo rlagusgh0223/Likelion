@@ -6,6 +6,7 @@ nland = x*y//10             #지뢰의 개수
 if nland == 0:              #맵이 너무 작을경우(가로*세로//10의 결과가 0인경우)
     nland = 1               #지뢰의 개수는 1
 landmine=[0]*nland          #지뢰 좌표 입력할 변수
+visited = [0]*nland         #방문했는지 확인하는 리스트
 count = 0                   #찾은 지뢰의 개수 계산할 변수
 
 i = 0                       #지뢰의 랜덤한 좌표를 만들기 위한 반복문
@@ -16,7 +17,7 @@ while i<nland:
     if nland>=2 and landmine[i-1] == landmine[i]:    #지뢰의 좌표가 중복될 경우 동작
         i -= 1    #i를 1 줄여서 다시 반복하여 중복된 좌표가 나오지 않도록 함
     i += 1
-print(landmine)     #지뢰 위치 표시. 편의를 위해 만들었으나 실제론 없어야 될 코드
+#print(landmine)     #지뢰 위치 표시. 편의를 위해 만들었으나 실제론 없어야 될 코드
 
 def search(X,Y):    #탐색함수
     uInput = X,Y    #사용자가 입력한 좌표값 리스트로 받음
@@ -32,20 +33,37 @@ def search(X,Y):    #탐색함수
             count = nland       #count의 개수를 지뢰의 개수와 일치시켜 본문의 반복문 종료
             return count
         else:                   #사용자가 입력한 좌표와 지뢰 좌표가 다를 경우
-            for j,k in landmine:    #지뢰 위치로부터 3,2,1칸 떨어져 있으면 그만큼 거리 표시
-                                    #만약 더 가까이 있는 지뢰 위치가 사전에 입력되지 않았다면
-                                    #현재 지뢰와 떨어져 있는 거리 맵에 입력
-                   #사용자 편의를 위해 X,Y값은 1이 줄어있는 상태이므로 계산시 대입한다
-                    #j는 세로, k는 가로 X,Y는 받을때부터 세로, 가로로 받았다
-                if (j+3 == X and k == Y) or (j-3 == X and k == Y) or (j == X and k+3 == Y) or (j == X and k-3 == Y) or (j+3 == X and k+3 == Y) or (j-3 == X and k+3 == Y) or (j+3 == X and k-3 == Y) or (j-3 == X and k-3 == Y):
-                    if Inmap[X][Y] != '2' or Inmap[X][Y] != '1':
-                        Inmap[X][Y] = '3'
-                elif (j+2 == X and k == Y) or (j-2 == X and k == Y) or (j == X and k+2 == Y) or (j == X and k-2 == Y) or (j+2 == X and k+2 == Y) or (j-2 == X and k+2 == Y) or (j+2 == X and k-2 == Y) or (j-2 == X and k-2 == Y):
-                    if Inmap[X][Y] != '1':
-                        Inmap[X][Y] = '2'
-                elif (j+1 == X and k == Y) or (j-1 == X and k == Y) or (j == X and k+1 == Y) or (j == X and k-1 == Y) or (j+1 == X and k+1 == Y) or (j-1 == X and k+1 == Y) or (j+1 == X and k-1 == Y) or (j-1 == X and k-1 == Y):
-                    Inmap[X][Y] = '1'
-                else:               #지뢰와 인접하지도 않고, 지뢰 위치도 아니면
+                                #만약 더 가까이 있는 지뢰 위치가 사전에 입력되지 않았다면
+                                #현재 지뢰와 떨어져 있는 거리 맵에 입력
+            j = landmine[i][0]
+            k = landmine[i][1]
+            #print(j,k)    #맵에 표시하는것을 알아보기 위한 변수. 실제 코드엔 필요없다       
+            #print(X,Y)
+            for c1 in range(-3,4,3):    #지뢰와 3의 거리만큼 떨어진 좌표
+                for c2 in range(-3,4,3):    #(-3 -3), (-3 0), (-3 3), (0 -3), (0 3), (3 -3), (3 0), (3 3)
+                    if c1==0 and c2==0:
+                        continue
+                    elif j+c1 == X and k+c2 == Y:
+                        if Inmap[X][Y] != '2' and Inmap[X][Y] != '1':
+                            Inmap[X][Y] = '3'
+            
+            for c1 in range(-2,3,2):    #지뢰와 2의 거리만큼 떨어진 좌표
+                for c2 in range(-2,3,2):    #(-2 -2), (-2 0), (-2 2), (0 -2), (0 2), (2 -2), (2 0), (2 2)
+                    if c1==0 and c2==0:
+                        continue
+                    elif j+c1 == X and k+c2 == Y:
+                        if Inmap[X][Y] != '1':
+                            Inmap[X][Y] = '2'
+            
+            for c1 in range(-1,2):      #지뢰와 1의 거리만큼 떨어진 좌
+                for c2 in range(-1,2):  #(-1 -1), (-1 0), (-1 1), (0 -1), (0 1), (1 -1), (1 0), (1 1)
+                    if c1==0 and c2==0:
+                        continue
+                    elif j+c1 == X and k+c2 == Y:
+                        Inmap[X][Y] = '1'
+
+            else:               #지뢰와 인접하지도 않고, 지뢰 위치도 아니면
+                if Inmap[X][Y] != '3' and Inmap[X][Y] != '2' and Inmap[X][Y] != '1': #다른 지뢰와도 관계가 없다면
                     Inmap[X][Y] = '◎'   #지뢰가 없다는 표시 맵에 입력
                 
 def eliminate(X,Y):         #제거함수
