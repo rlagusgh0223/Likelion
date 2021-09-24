@@ -6,7 +6,6 @@ nland = x*y//10             #지뢰의 개수
 if nland == 0:              #맵이 너무 작을경우(가로*세로//10의 결과가 0인경우)
     nland = 1               #지뢰의 개수는 1
 landmine=[0]*nland          #지뢰 좌표 입력할 변수
-visited = [0]*nland         #방문했는지 확인하는 리스트
 count = 0                   #찾은 지뢰의 개수 계산할 변수
 
 i = 0                       #지뢰의 랜덤한 좌표를 만들기 위한 반복문
@@ -17,7 +16,7 @@ while i<nland:
     if nland>=2 and landmine[i-1] == landmine[i]:    #지뢰의 좌표가 중복될 경우 동작
         i -= 1    #i를 1 줄여서 다시 반복하여 중복된 좌표가 나오지 않도록 함
     i += 1
-#print(landmine)     #지뢰 위치 표시. 편의를 위해 만들었으나 실제론 없어야 될 코드
+print(landmine)     #지뢰 위치 표시. 편의를 위해 만들었으나 실제론 없어야 될 코드
 
 def search(X,Y):    #탐색함수
     uInput = X,Y    #사용자가 입력한 좌표값 리스트로 받음
@@ -55,15 +54,15 @@ def search(X,Y):    #탐색함수
                         if Inmap[X][Y] != '1':
                             Inmap[X][Y] = '2'
             
-            for c1 in range(-1,2):      #지뢰와 1의 거리만큼 떨어진 좌
+            for c1 in range(-1,2):      #지뢰와 1의 거리만큼 떨어진 좌표
                 for c2 in range(-1,2):  #(-1 -1), (-1 0), (-1 1), (0 -1), (0 1), (1 -1), (1 0), (1 1)
                     if c1==0 and c2==0:
                         continue
                     elif j+c1 == X and k+c2 == Y:
                         Inmap[X][Y] = '1'
 
-            else:               #지뢰와 인접하지도 않고, 지뢰 위치도 아니면
-                if Inmap[X][Y] != '3' and Inmap[X][Y] != '2' and Inmap[X][Y] != '1': #다른 지뢰와도 관계가 없다면
+            else:               #현재 검사중인 지뢰와 인접하지도 않고, 지뢰 위치도 아니면
+                if Inmap[X][Y] != '3' and Inmap[X][Y] != '2' and Inmap[X][Y] != '1': #이전 지뢰와도 관계가 없다면
                     Inmap[X][Y] = '◎'   #지뢰가 없다는 표시 맵에 입력
                 
 def eliminate(X,Y):         #제거함수
@@ -85,12 +84,18 @@ while count < nland:                #지뢰를 전부 발견할때까지 돌아�
         print(Inmap[i])
     choice = int(input("1: 탐색 / 2:제거"))     #탐색시 밟으면 게임오버, 찾으면 카운트 증가를 위한 조건문
     if choice == 1:
-        X = int(input("가로 : "))
-        Y = int(input("세로 : "))
+        X = int(input("가로 : "))-1    #리스트는 0에서부터 시작하지만 사용자는 1에서부터 시작할것 감안
+        Y = int(input("세로 : "))-1
+        if X<0 or X>x or Y<0 or Y>y:    #사용자가 입력한 좌표가 맵의 범위를 초과하면 다시 입력
+            print("다시 입력하시오")
+            continue
         search(Y,X)             #탐색시 탐색함수를 호출하고 좌표를 넘김
     elif choice == 2:
-        X = int(input("가로 : "))
-        Y = int(input("세로 : "))
+        X = int(input("가로 : "))-1    #리스트는 0에서부터 시작하지만 사용자는 1에서부터 시작할것 감안
+        Y = int(input("세로 : "))-1
+        if X<0 or X>x or Y<0 or Y>y:    #사용자가 입력한 좌표가 맵의 범위를 초과하면 다시 입력
+            print("다시 입력하시오")
+            continue
         eliminate(Y,X)          #제거시 제거함수를 호출하고 좌표를 넘김
     else:
         print("잘못된 입력")     #제시된 1이나 2가 아니면 잘못된 입력이라고 하고 다시 반복
