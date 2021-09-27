@@ -24,21 +24,20 @@ class navi(QMainWindow, form_navi):
         now = start
         route = start
         length = 0
+        rend=''
 
         #인천-울산/부산은 한번 건너도 닿지 않으므로 추가로 계산
-        if (start=='인천' and end=='부산') or (start=='인천' and end=='울산'):
+        if ((end=='부산' or end=='울산') and start=='인천'):
             start = '서울'
             route = '인천-서울'
             length += 32
-        elif (start=='부산' and end=='인천') or (start=='울산' and end=='인천'):
+        elif ((start=='부산' or start=='울산') and end=='인천'):
             end = '서울'
             rend = '인천'
             length += 32
 
-        print(start,route,length)
         for i in korea[start]:    #현재 검색하는 도시 인근의 거리 구하는 반복문
             visited[i[0]] = i[1]
-        print(visited)
         
         for i in range(len(korea[start])):    #인접한 도시는 두번 계산할 필요가 없다
             if end in korea[start][i][0]:   #도착지가 출발지의 딕셔너리 안에 있다면
@@ -50,11 +49,10 @@ class navi(QMainWindow, form_navi):
             if visited[i[0]] != 0: #이때 visited의 값이 0이 아니라는 것은 출발지에서 들렀다는 뜻
                 route = route + '-' + i[0] + '-' + end    #출발지와 중간 접견지, 도착지를 계산한다
                 length += visited[i[0]] + i[1]
-                if (start=='부산' and rend=='인천') or (start=='울산' and rend=='인천'):
+                if ((start=='부산' or start=='울산') and rend=='인천'):
                     route = route + '-인천'   #부산/울산 -> 인천일 경우 경로를 추가해준다
                 return route, length    #여기서 리턴하지 않으면 광주-대구의 경우 겹치는 경로가 있어 이상한 경로가 나온다
             visited[i[0]] = i[1]
-        print(visited)
      
     def search(self):
         Start = self.start.toPlainText()
