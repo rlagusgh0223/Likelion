@@ -1,11 +1,11 @@
 import random
 x = int(input("가로 : "))
 y = int(input("세로 : "))
-Inmap = [['0' for i in range(x)] for j in range(y)]     #가로*세로 곱한 값이 10 이상이어야 맵이 생긴다
+Inmap = [['0' for i in range(x)] for j in range(y)]
 nland = x*y//10             #지뢰의 개수
 if nland == 0:              #맵이 너무 작을경우(가로*세로//10의 결과가 0인경우)
     nland = 1               #지뢰의 개수는 1
-landmine=[0]*nland          #지뢰 좌표 입력할 변수
+landmine=[0]*nland          #지뢰 좌표 입력할 리스트 선언
 count = 0                   #찾은 지뢰의 개수 계산할 변수
 
 i = 0                       #지뢰의 랜덤한 좌표를 만들기 위한 반복문
@@ -36,8 +36,7 @@ def search(X,Y):    #탐색함수
                                 #현재 지뢰와 떨어져 있는 거리 맵에 입력
             j = landmine[i][0]
             k = landmine[i][1]
-            #print(j,k)    #맵에 표시하는것을 알아보기 위한 변수. 실제 코드엔 필요없다       
-            #print(X,Y)
+
             for c1 in range(-3,4,3):    #지뢰와 3의 거리만큼 떨어진 좌표
                 for c2 in range(-3,4,3):    #(-3 -3), (-3 0), (-3 3), (0 -3), (0 3), (3 -3), (3 0), (3 3)
                     if c1==0 and c2==0:
