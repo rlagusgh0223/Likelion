@@ -1,0 +1,52 @@
+import tensorflow as tf
+import sys
+import os
+from tensorflow.keras.models import load_model
+
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
+
+model = load_model('./model/15-0.0591.hdf5')#내가 학습한 파일로 올렸음
+#model = load_model('/content/model_cnn/15-0.0595.hdf5')    #colab의 경우
+model.summary()
+
+test_num1 = cv2.imread('./model/minist_test/3.jpg')    #여기서 경로는 바꿔도 된다
+test_num2 = cv2.imread('./model/minist_test/6.jpg')
+test_num3 = cv2.imread('./model/minist_test/5.jpg')
+#colab의 예
+#test_num3 = cv2.imread('/content/drive/MyDrive/Colab Notebooks/Model/minist_test/5.jpg')
+
+#RGB file을 gray로
+test_num1 = cv2.cvtColor(test_num1, cv2.COLOR_BGR2GRAY)
+test_num2 = cv2.cvtColor(test_num2, cv2.COLOR_BGR2GRAY)
+test_num3 = cv2.cvtColor(test_num3, cv2.COLOR_BGR2GRAY)
+#위 과정을 거치면 색상이 반전됨 -> 아래에서 색상을 다시 반전
+test_num1 = 255 - test_num1
+test_num2 = 255 - test_num2
+test_num3 = 255 - test_num3
+
+plt.imshow(test_num1, cmap='Greys')
+plt.show()
+plt.imshow(test_num2, cmap='Greys')
+plt.show()
+plt.imshow(test_num3, cmap='Greys')
+plt.show()
+
+test_num1 = test_num1.reshape(1, 784).astype('float64') / 255
+test_num2 = test_num2.reshape(1, 784).astype('float64') / 255
+test_num3 = test_num3.reshape(1, 784).astype('float64') / 255
+
+#이제는 predict_classes 지원 안한다
+#print('The Answer 3 is ', model.predict_classes(test_num1))
+#print('The Answer 6 is ', model.predict_classes(test_num2))
+#print('The Answer 5 is ', model.predict_classes(test_num3))
+
+#model.predict_classes는 아래 코드와 동일한 역할을 함
+test_predict = list()
+test_predict.append(model.predict(test_num1))
+test_predict.append(model.predict(test_num2))
+test_predict.append(model.predict(test_num3))
+print('The Answer 3 is ', test_predict[0].argmax())
+print('The Answer 6 is ', test_predict[1].argmax())
+print('The Answer 5 is ', test_predict[2].argmax())
