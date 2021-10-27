@@ -1,0 +1,26 @@
+import tensorflow as tf
+import sys
+import os
+from tensorflow.keras.models import load_model
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
+
+model = load_model('./model/minist_test/10-0.0266.hdf5')
+model.summary()
+n = 5
+test_num = [[0]*n for _ in range(n)]
+test_num[0] = plt.imread('./model/minist_test/2.jpg')
+test_num[1] = plt.imread('./model/minist_test/3.jpg')
+test_num[2] = plt.imread('./model/minist_test/5.jpg')
+test_num[3] = plt.imread('./model/minist_test/6.jpg')
+test_num[4] = plt.imread('./model/minist_test/7.jpg')
+
+#RGB file을 gray로
+for i in range(5):
+    test_num[i] = cv2.cvtColor(test_num[i], cv2.COLOR_BGR2GRAY)
+    test_num[i] = cv2.bitwise_not(test_num[i])
+    plt.imshow(test_num[i], cmap='Greys')
+    plt.show()
+    test_num[i] = test_num[i].reshape(1, 28, 28, 1).astype('float64') / 255
+    print('The Answer ', i, 'is', model.predict(test_num[i]).argmax())

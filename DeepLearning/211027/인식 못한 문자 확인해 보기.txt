@@ -1,0 +1,39 @@
+import tensorflow as tf
+import sys
+import os
+from tensorflow.keras.models import load_model
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
+from tensorflow.keras.datasets import mnist
+
+#data를 읽어 온 후 학습시와 동일하게 format을 변경
+(X_train, Y_class_train), (X_test, Y_class_test) = mnist.load_data()
+X_train = X_train.reshape(X_train.shape[0], 28, 28, 1).astype('float32') / 255
+X_test = X_test.reshape(X_test.shape[0], 28, 28, 1).astype('float32') / 255
+
+model = load_model('./model/minist_test/10-0.0266.hdf5')
+model.summary()
+
+wrong_result = []
+predicted_result = model.predict(X_test)
+predicted_labels = np.argmax(predicted_result, axis = 1)
+
+for n in range(0, len(Y_class_test)):
+    if predicted_labels[n] != Y_class_test[n]:
+        wrong_result.append(n)
+len(wrong_result)
+
+plt.figure(figsize=(14,12))
+
+for idx, n in enumerate(wrong_result):
+    #wrong_result 이 결과를 모두 표시해야 함
+    #한줄에 4개를 표시하므로 마지막에 0에서 4개가 남음
+    #이거에 대비해서 한줄을 더 만들어줌
+    plt.subplot(len(wrong_result)/4+1, 4, idx+1)
+    plt.subplots_adjust(left=0.0, bottom=0.0, right=1.5, top=1.52)
+    plt.imshow(X_test[n].reshape(28, 28), cmap='Greys', interpolation='nearest')
+    plt.title('Label : ' + str(Y_class_test[n]) + ' Predict : ' + str(predicted_labels[n]))
+    plt.axis('off')
+    
+plt.show()
