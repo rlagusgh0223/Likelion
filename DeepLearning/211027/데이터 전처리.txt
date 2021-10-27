@@ -1,0 +1,29 @@
+from tensorflow.keras.datasets import mnist
+
+#이때 불러온 이미지 데이터를 X로, 이 이미지에 0 ~ 9 까지 붙인 이름표를 Y_class 로 구분하여 명명
+(X_train, Y_class_train), (X_test, Y_class_test) = mnist.load_data()
+
+#다음과 같이 확인할 수 있음
+print("학습셋 이미지 수 : %d개" % (X_train.shape[0]))
+print("테스트셋 이미지 수 : %d개" % (X_test.shape[0]))
+
+#데이터 하나 불러오기
+#모든 이미지가 X_train에 저장되어 있으므로 X_train[0]을 통해 첫번째 이미지를,
+#cmap='Grys'옵션을 지정해 흑백으로 출력되게 함
+import matplotlib.pyplot as plt
+plt.imshow(X_train[0], cmap='Greys')
+plt.show()
+
+#위 이미지를 값으로 표현
+#이 이미지는 가로 28, 세로 28 총 784개의 픽셀로 이루어져 있음
+#각 픽셀은 밝기 정도에 따라 0부터 255까지의 등급을 매김
+#흰색 배경이 0이라면 글씨가 들어간 곳은 1 ~ 255까지 숫자 중
+#하나로 채워져 긴 행렬로 이루어진 하나의 집합으로 변환됨
+import sys
+for x in X_train[0]:
+    for i in x:
+        #sys.stdout.write('%d\t' %i)    #이걸로 하면 모양은 보이지 않지만 숫자는 구분이 된다
+        sys.stdout.write('%3d' %i)    #이걸로 하면 숫자는 겹쳐 보이지만 모양은 보인다
+    sys.stdout.write('\n')
+
+Y_class_train[0]
