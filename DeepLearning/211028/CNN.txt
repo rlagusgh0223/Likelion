@@ -1,0 +1,131 @@
+#CNN을 사용하는 image처리 예제
+
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+import matplotlib.pyplot as plt
+fashion_mnist = keras.datasets.fashion_mnist
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+print(train_images.shape)    #(60000, 28, 28) - 60000개의 샘플 가로 28, 세로 28
+print(train_labels)          #[9 0 0 ... 3 0 5]
+print(test_images.shape)     #(10000, 28, 28)
+print(len(test_labels))      #10000
+
+#훈련 세트에 있는 첫 번째 이미지 - 픽셀 값의 범위가 0~255 사이 확인
+plt.figure()
+plt.imshow(train_images[0])
+plt.colorbar()
+plt.grid(False)
+plt.show()
+plt.figure(figsize=(10,10))
+for i in range(25):
+    plt.subplot(5, 5, i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.binary)
+    plt.xlabel(class_names[train_labels[i]])
+plt.show()
+
+#1차원이 아닌 (총 개수, 행, 열, 색상 또는 흑백) 형식, 입력 이미지가 색상이면 3, 흑백이면 1
+#즉 CNN을 쓰기 전에는 1차원 배열로 만들어 주었지만 CNN에서는 image정보를 그대로 살림
+train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32') / 255
+test_images = test_images.reshape(test_images.shape[0], 28, 28, 1).astype('float32') / 255
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3,3), input_shape=(28,28,1), activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=2))
+model.add(Dropout(0.25))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation='softmax'))
+
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+model.fit(train_images, train_labels, epochs=5)
+
+test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
+
+print("\n테스트 정확도 : ", test_acc)     #테스트 정확도 : 0.9118000268936157
+
+#훈련된 모델을 사용하여 이미지에 대한 예측을 생성
+predictions = model.predict(test_images)
+
+#예측은 10개의 숫자 배열로 표시됨. 10개의 옷 품목에 상응하는 모델의 신뢰도(confidence)
+#가장 높은 신뢰도를 가진 레이블을 찾아야 함
+print(predictions[0])
+np.argmax(predictions[0]) #0~9중 9가 가장 크므로 9가 아래에 나온다
+print(test_labels[0])     #9
+
+#10개 클래스에 대한 예측을 모두 그래프로 표현
+def plot_image(i, predictions_array, true_label, img):
+    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    
+    plt.imshow(img, cmap=plt.cm.binary)
+    
+    predicted_label = np.argmax(predictions_array)
+    if predicted_label == true_label:
+        color = 'blue'
+    else:
+        color = 'red'
+        
+    plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],100*np.max(predictions_array),
+                                         class_names[true_label]), color=color)
+    
+#predictions_array 10개의 실수 결과 값 /true_label 분류번호
+def plot_value_array(i, predictions_array, true_label):
+    predictions_array, true_label = predictions_array[i], true_label[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    thisplot = plt.bar(range(10), predictions_array, color="#777777")
+    plt.ylim([0,1])    #y축을 0 ~ 1 사이로
+    predicted_label = np.argmax(predictions_array)
+    
+    #올바른 예측은 파랑색 / 잘못된 예측은 빨강색
+    thisplot[predicted_label].set_color('red')
+    thisplot[true_label].set_color('blue')
+
+i = 0
+plt.figure(figsize=(6, 3))
+plt.subplot(1, 2, 1)
+
+#predictions, test_labels, test_images의 0번째 index값을 넘겨줌(해당 이미지를 표시)
+#이 부분도 CNN을 사용하기 위해 image에 gray 또는 RGB정보를
+#넣었으나 함수에서는 가로 세로 픽셀만 요구하므로 차원 축소가 필요
+plot_image(i, predictions, test_labels, np.squeeze(test_images, axis=3))
+plt.subplot(1, 2, 2)
+
+#값을 bar로 표시
+plot_value_array(i, predictions, test_labels)
+plt.show()
+i = 12
+plt.figure(figsize=(6, 3))
+plt.subplot(1, 2, 1)
+plot_image(i, predictions, test_labels, np.squeeze(test_images, axis=3))
+plt.subplot(1, 2, 2)
+plot_value_array(i, predictions, test_labels)
+plt.show()
+
+#처음 x개의 테스트 이미지와 예측 레이블, 진짜 레이블을 출력
+#올바른 예측은 파랑색으로 잘못된 예측은 빨강색으로 나타냄
+num_rows = 5
+num_cols = 3
+num_images = num_rows*num_cols
+plt.figure(figsize=(2*2*num_cols, 2*num_rows))
+for i in range(num_images):
+    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plot_image(i, predictions, test_labels, np.squeeze(test_images, axis=3))
+    plt.subplot(num_rows, 2*num_cols, 2*i+2)
+    plot_value_array(i, predictions, test_labels)
+plt.show()
