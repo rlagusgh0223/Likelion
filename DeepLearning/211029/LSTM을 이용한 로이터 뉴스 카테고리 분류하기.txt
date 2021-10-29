@@ -1,0 +1,77 @@
+import numpy
+import tensorflow as tf
+
+#로이터 뉴스 데이터셋 불러오기
+from tensorflow.keras.datasets import reuters
+
+#seed값 설정
+seed = 0
+numpy.random.seed(seed)
+tf.random.set_seed(seed)
+
+#불러온 데이터를 학습셋과 테스트셋으로 나누기
+(X_train, Y_train), (X_test, Y_test) = reuters.load_data(num_words=1000, test_split=0.2)
+
+#데이터 확인하기
+category = numpy.max(Y_train) + 1
+print(category, '카테고리')
+print(len(X_train), '학습용 뉴스 기사')
+print(len(X_test), '테스트용 뉴스 기사')
+print(X_train[0])    #첫번째 훈련용 뉴스 기사(토큰화된 값(정수)이 나온다)
+print(Y_train[0])    #첫번째 훈련용 뉴스 기사의 레이블
+
+#첫번째 기사를 출력
+#get_word_index() 각 단어와 그 단어에 부여된 인덱스를 리턴
+word_to_index = reuters.get_word_index()
+print(word_to_index)    #전체 단어와 인덱스가 딕셔너리로 표시됨
+
+index_to_word={}    #index를 단어로 변화할 자료구조
+for key, value in word_to_index.items():
+    index_to_word[value] = key
+    
+#print(index_to_word[1])
+print(' '.join([index_to_word[X] for X in X_train[0]]))
+
+from tensorflow.keras.preprocessing import sequence
+from tensorflow.keras.utils import to_categorical
+
+#데이터 전처리
+x_train = sequence.pad_sequences(X_train, maxlen=100)
+x_test = sequence.pad_sequences(X_test, maxlen=100)
+
+#데이터 전처리
+y_train = to_categorical(Y_train)
+y_test = to_categorical(Y_test)
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, LSTM, Embedding
+from tensorflow.keras.preprocessing import sequence
+
+#모델의 설정
+model = Sequential()
+model.add(Embedding(1000, 100))
+model.add(LSTM(100, activation='tanh'))
+model.add(Dense(46, activation='softmax'))
+
+#모델의 컴파일
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+#모델의 실행
+history = model.fit(x_train, y_train, batch_size=100, epochs=30, validation_data=(x_test, y_test))
+#테스트 정확도 출력
+print("\n Test Accuracy : %.4f" % (model.evaluate(x_test, y_test) [1]))
+#테스트셋의 오차
+y_vloss = history.history['val_loss']
+#학습셋의 오차
+y_loss = history.history['loss']
+
+import matplotlib.pyplot as plt
+#그래프로 표현
+x_len = numpy.arange(len(y_loss))
+plt.plot(x_len, y_vloss, marker='.', c='red', label='Testset_loss')
+plt.plot(x_len, y_loss, marker='.', c='blue', label='Trainset_loss')
+#그래프에 그리드를 주고 레이블을 표시
+plt.legend(loc='upper right')
+plt.grid()
+plt.xlabel('epoch')
+plt.ylabel('loss')
+plt.show()
