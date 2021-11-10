@@ -1,0 +1,33 @@
+print(train_generator)
+
+import cv2
+title = 'No_data'    #윈도우 이름
+#no_data에 이미지 파일을 넣어야 사각형으로 특정 부분을 표시할 수 있음
+#이미지 파일 한장이 아니라 ImageDataGenerator로 증가한 모든 데이터를 아래 코드를 이용해
+#특정 부분을 컴퓨터가 학습할 수 있도록 한 후 모델을 만들어야 되는데
+#거기까진 만들지 못했음
+no_data = cv2.imread("C:/Users/Owner/Desktop/khh/Likelion/project/train/oleg/4.png")    #이미지 파일 적재
+if no_data is None:    #예외처리 - 이미지 파일 읽기 여부 조사
+    raise Exception("파일 읽기 에러")
+print(no_data.shape)
+#no_data[no_data >= 170] = 255    #배경을 백색으로 만들어줌. 우리는 이미 백색이라 필요 없을듯
+
+img_gray = cv2.cvtColor(no_data, cv2.COLOR_BGR2GRAY)
+#이미지 중 스켈레톤 영역을 찾아 표시하기
+#contour란 윤곽이라는 뜻. OpenCV에서 영상이나 이미지의 외곽 혹은 내곽을 검출할 수 있음
+#findContours함수를 통해 이진화 이미지에서 윤곽선을 찾아냄
+ret, img_th = cv2.threshold(img_gray, 150, 230, cv2.THRESH_BINARY_INV)
+contours, hierachy = cv2.findContours(img_th.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+rects = [cv2.boundingRect(each) for each in contours]
+for rect in rects:
+    #스켈레톤 전신 사각형으로 구분
+    #cv2.rectangle(no_data, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (255, 0, 0), 1)
+    #어깨부분 구분(이미지, 시작점좌표(좌측상단 x,y), 끝점좌표(우측하단 x,y), 선 색깔(빨간색), 선 두께)
+    #cv2.rectangle(no_data, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[2]), (255, 0, 0), 1)
+    #골반부분 구분
+    #cv2.rectangle(no_data, (rect[0], (rect[1]+rect[3])//3), (rect[3]//2, rect[3]-rect[2]), (255, 0, 0), 1)
+    #다리부분 구분
+    cv2.rectangle(no_data, (rect[0], (rect[1]+rect[3])//2), (rect[3]//2, rect[3]), (255, 0, 0), 1)
+print(rect)
+plt.figure(figsize=(15,12))
+plt.imshow(no_data)
